@@ -79,19 +79,17 @@ def sqrt_log(A,Parada):
         iter += 1
 
 
-def grafico(L1, L2,A):
-
+def grafico(L1, L2, A):
     plt.figure(figsize=(8, 5.5))  # Define o tamanho da figura
 
     # Plotando os valores de A, B e C
-    plt.plot(L1, A, color='blue', marker='o', linestyle='-', label='Iter_T1 versus A')  # A versus B
-    plt.plot(L2, A, color='green', marker='s', linestyle='-', label='Iter_log versus A')  # A versus C
+    plt.plot(A, L1, color='blue', marker='o', linestyle='-', label='X0 do Trabalho 1')  # A versus B
+    plt.plot(A, L2, color='green', marker='s', linestyle='-', label='X0 log ieee')  # A versus C
 
     # Adicionando rótulos e título
-    plt.xlabel('Valores de interação T1 e interação log', color='red', fontweight='bold')
-    plt.ylabel('Valor de A', color='red', fontweight='bold')
-    plt.title('Valores de A em relação a interação T1 e interação log', color='blue', fontweight='bold')
-    
+    plt.xlabel('A', color='red', fontweight='bold')
+    plt.ylabel('Quantidade de Iterações', color='red', fontweight='bold')
+
     # Adicionando legenda
     plt.legend()
 
@@ -99,7 +97,6 @@ def grafico(L1, L2,A):
     plt.grid(True, linestyle='--', alpha=0.6)
 
     plt.show()
-
 
 raiz(list_A) # calcula o chute inicial para cada A usando o trab 1
 
