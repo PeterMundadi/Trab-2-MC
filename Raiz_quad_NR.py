@@ -1,3 +1,6 @@
+# Discplina de Matemática Computacional
+# Alunos: Gabriel Bitdinger Medeiros - 118542 e Peter Mundadi - 116338
+
 import math
 import matplotlib.pyplot as plt
 
