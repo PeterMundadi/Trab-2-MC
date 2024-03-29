@@ -93,9 +93,11 @@ def aprox_cosseno(x):
     #C_X=980995276799/980995276800 - P_x
     C_X =1 - P_x - 1/fat(12)*2048
     
+    C_X2 = 1 - calc_exp(x,2)/fat(2) +calc_exp(x,4)/fat(4) - calc_exp(x,6)/fat(6) + calc_exp(x,8)/fat(8) - calc_exp(x,10)/fat(10) + 3*calc_exp(x,10)/fat(12) - 27*calc_exp(x,8)/fat(12)*8 + 7*calc_exp(x,6)/fat(12)*4 - 105*calc_exp(x,4)/fat(12)*256 + 9*calc_exp(x,2)/fat(12)*256 - 1/fat(12)*2048
     
+    C_X3 = 1 + ((-x**2/2) *(1- (x**2/12)*((-x**2/30)*((1-x**2/56)*((1-x**2/90)))))) + (x**2/fat(12) * (9/256 + x**2 * (-105/256 + x**2 * (7/4 + x**2 * (-27/8 + x**2 * (3)))))) - 1/479001600*2048
     #y = 1 - x**2 / fat(2) + x**4 / fat(4) - x**6 / fat(6) + x**8 / fat(8) - x**10 / fat(10) + x**12 / fat(12)
-    return C_X,P_x
+    return C_X,P_x,C_X2,C_X3
 
 #Função cosseno do python
 def cosseno_py(x):
@@ -107,21 +109,23 @@ def main():
     for x in List_X:
         
         Ap_S,Ap_S2,Ap_S3 = aprox_seno(x)
-        Ap_C,P_X = aprox_cosseno(x)
+        Ap_C,P_X,Ap_C2,C_X3 = aprox_cosseno(x)
         S_py = seno_py(x)
         C_py = cosseno_py(x)
 
         print("x: ", x)
         print("SENO")
-        print("Aprox seno1: ", Ap_S)
-        print("Aprox Seno2: ", Ap_S2)
+        #print("Aprox seno1: ", Ap_S)
+        #print("Aprox Seno2: ", Ap_S2)
         print("Aprox Seno3: ", Ap_S3)
         print("seno_py    : ", S_py)
         print()
         print("COSSENO")
-        print("P_x: ", P_X)
-        print("Aprox Cosseno: ", Ap_C)
-        print("Cosseno_py: ", C_py)
+        #print("P_x: ", P_X)
+        #print("Aprox Cosseno : ", Ap_C)
+        #print("Aprox Cosseno2: ", Ap_C2)
+        print("Aprox Cosseno3: ", C_X3)        
+        print("Cosseno_py    : ", C_py)
 
         print("-----------------------")
 
