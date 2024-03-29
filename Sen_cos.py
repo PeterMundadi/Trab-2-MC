@@ -1,5 +1,5 @@
 import math
-
+import matplotlib.pyplot as plt
 '''
 Sen11_X = X- X^3/3! + X^5/5! - X^7/7! + X^9/9! - X^11/11!
 
@@ -32,7 +32,8 @@ pi_6 = pi/6
 List_X =[-pi_4,-pi_6,0,pi_6,pi_4]
 
 
-
+list_erro_seno = []
+list_erro_cosseno = []
 
 #função doFatorial
 def fat(n):
@@ -64,19 +65,9 @@ def calc_exp(x, n):  # x^n
 def aprox_seno(x):
     x=abs(x)
     
-    k = x * (1 + calc_exp(x,2) * (-1 / fat(3) + calc_exp(x,2) * (1 / fat(5) + calc_exp(x,2) * (-1 / fat(7) + calc_exp(x,2) * (1 / fat(9) + calc_exp(x,2) * (11 / (fat(11) * 4) + calc_exp(x,2) * (-11 / (fat(11) * 4) + calc_exp(x,2) * (77 / (fat(11) * 64) + calc_exp(x,2) * (55 / (fat(11) * 256) + calc_exp(x,2) * (-11 / (fat(11) * 1024)))))))))))
-    
-    #y = y - 259/256
-
-    y = x * (1 + calc_exp(x,2) * (- 1/fat(3) + calc_exp(x,2) * (1/fat(5) + calc_exp(x,2) * (- 1/fat(7) + calc_exp(x,2) * (1/fat(9) + calc_exp(x,2) * (- 11/fat(11)*4 + calc_exp(x,2) * (35/fat(11)*32 + calc_exp(x,2) * (25/fat(11)*64 + calc_exp(x,2) * (25/fat(11)*512 - 1/fat(11)*1024)))))))))
-    #print("y aprox : ", y)
-    
-
     S_X = x * (1 + calc_exp(x,2) * (-1 / fat(3) + calc_exp(x,2) * (1 / fat(5) + calc_exp(x,2) * (-1 / fat(7) + calc_exp(x,2) * (1 / fat(9) - calc_exp(x,2) * (11 / (fat(11) * 4) - calc_exp(x,2) * (11 / (fat(11) * 4) - calc_exp(x,2) * (77 / (fat(11) * 64) - calc_exp(x,2) * (55 / (fat(11) * 256) - calc_exp(x,2) * (11 / (fat(11) * 1024)))))))))))
 
-    
-    
-    return y,k,S_X
+    return S_X
 
 #Funçao seno do python
 def seno_py(x):
@@ -86,50 +77,70 @@ def seno_py(x):
 #Função para calcular o cosseno pelo Chebyshev
 def aprox_cosseno(x):
     x=abs(x)
-    
-    P_x = (1/fat(12)) * calc_exp(x,2) * (1 + (calc_exp(x,2) / 3) * (1 + (calc_exp(x,2) / 5) * (1 + (calc_exp(x,2) / 7) * (1 + (calc_exp(x,2) / 9) * (1 + (calc_exp(x,2) / 11) * (3 + (calc_exp(x,2) / 12) * (-27 + (7/8) * (calc_exp(x,2) + (105/4) * (calc_exp(x,2) + (9/256) * calc_exp(x,2))))))))))
-
-
-    #C_X=980995276799/980995276800 - P_x
-    C_X =1 - P_x - 1/fat(12)*2048
-    
-    C_X2 = 1 - calc_exp(x,2)/fat(2) +calc_exp(x,4)/fat(4) - calc_exp(x,6)/fat(6) + calc_exp(x,8)/fat(8) - calc_exp(x,10)/fat(10) + 3*calc_exp(x,10)/fat(12) - 27*calc_exp(x,8)/fat(12)*8 + 7*calc_exp(x,6)/fat(12)*4 - 105*calc_exp(x,4)/fat(12)*256 + 9*calc_exp(x,2)/fat(12)*256 - 1/fat(12)*2048
-    
+      
     C_X3 = 1 + ((-x**2/2) *(1- (x**2/12)*((-x**2/30)*((1-x**2/56)*((1-x**2/90)))))) + (x**2/fat(12) * (9/256 + x**2 * (-105/256 + x**2 * (7/4 + x**2 * (-27/8 + x**2 * (3)))))) - 1/479001600*2048
-    #y = 1 - x**2 / fat(2) + x**4 / fat(4) - x**6 / fat(6) + x**8 / fat(8) - x**10 / fat(10) + x**12 / fat(12)
-    return C_X,P_x,C_X2,C_X3
+    return C_X3
 
 #Função cosseno do python
 def cosseno_py(x):
     x=abs(x)
     return math.cos(x)
- 
+
+#Função para plotar o gráfico
+def grafico(list_erro_seno, list_erro_cosseno, List_X):
+    # Define o tamanho da figura
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5.5))
+
+    # Plotando os valores de erro para seno
+    ax1.plot(List_X, list_erro_seno, color='blue', marker='o', linestyle='-', label='Erro Seno')
+    ax1.set_ylabel('Erro', color='red', fontweight='bold')
+    ax1.set_title('Erro do Seno', color='blue', fontweight='bold')
+    ax1.legend()
+    ax1.grid(True, linestyle='--', alpha=0.6)
+
+    # Plotando os valores de erro para cosseno
+    ax2.plot(List_X, list_erro_cosseno, color='green', marker='s', linestyle='-', label='Erro Cosseno')
+    ax2.set_xlabel('Valores de X', color='red', fontweight='bold')
+    ax2.set_ylabel('Erro', color='red', fontweight='bold')
+    ax2.legend()
+    ax2.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()  # Ajusta o layout para evitar sobreposição
+    plt.show()
+
 def main():
 
     for x in List_X:
         
-        Ap_S,Ap_S2,Ap_S3 = aprox_seno(x)
-        Ap_C,P_X,Ap_C2,C_X3 = aprox_cosseno(x)
+        Ap_S3 = aprox_seno(x)
+        C_X3 = aprox_cosseno(x)
         S_py = seno_py(x)
         C_py = cosseno_py(x)
 
+        list_erro_seno.append(abs(S_py - Ap_S3))
+        list_erro_cosseno.append(abs(C_py - C_X3))
+
         print("x: ", x)
-        print("SENO")
-        #print("Aprox seno1: ", Ap_S)
-        #print("Aprox Seno2: ", Ap_S2)
+
+        print("--SENO--") 
         print("Aprox Seno3: ", Ap_S3)
         print("seno_py    : ", S_py)
+        print("Erro       : ", abs(S_py - Ap_S3))
         print()
-        print("COSSENO")
-        #print("P_x: ", P_X)
-        #print("Aprox Cosseno : ", Ap_C)
-        #print("Aprox Cosseno2: ", Ap_C2)
+
+        print("--COSSENO--")
         print("Aprox Cosseno3: ", C_X3)        
         print("Cosseno_py    : ", C_py)
-
+        print("Erro          : ", abs(C_py - C_X3))
         print("-----------------------")
+    
+    grafico(list_erro_seno, list_erro_cosseno, List_X)
 
 main()
+
+
+
+
 
 def calcular_termo(x, n):
 
