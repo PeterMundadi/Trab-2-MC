@@ -1,14 +1,22 @@
 import math
+import matplotlib.pyplot as plt
 
 
 
 list_A = [0.5,1,2,10,40,100,1000,100000]
 #list_chute_x0 =[0.7,1,2,4,7,11,31,301]
 
-list_chute_x0 = [0.3,0.6,1.6,3.6,6.3,10.3,31.3,301.3]
-
+#list_chute_x0 = [0.3,0.6,1.6,3.6,6.3,10.3,31.3,301.3]
+list_chute_T1 = []
 list_chute_py = []
+
 list_mySqrt = []
+list_T1 = []
+list_sqrt_log = []
+
+list_mySqrt_iter = []
+list_T1_iter = []
+list_sqrt_log_iter = []
 
 Parada = 1e-2
 
@@ -21,13 +29,13 @@ def raiz(list_X):
         m = x / (2**K) # m =1+f // mantiça
         f = m - 1
         raiz_calc = 1 + (f/2) * (1 - f/(4 + 2*f))
-        list_chute_x0.append(raiz_calc)    
+        list_chute_T1.append(raiz_calc)    
 
         # Raiz pela função do python
-        raiz_py = math.sqrt(m)
-        list_chute_py.append(raiz_py)
+        #raiz_py = math.sqrt(m)
+        #list_chute_T1.append(raiz_py)
 
-def mySqrt(A,X0,Parada):
+def mySqrt(A,X0,Parada): # usando o trab 1 
    
     Xk = X0
     '''
@@ -37,7 +45,7 @@ def mySqrt(A,X0,Parada):
     print("     X0: ", X0)
     print("     Parada: ", Parada)
     print("---------------")'''
-   
+    iter = 1
     #while True:
     for _ in range(100):
         
@@ -45,25 +53,75 @@ def mySqrt(A,X0,Parada):
         #print("X_prox_k: ", X_prox_k)
 
         if abs(X_prox_k - Xk) < Parada:
-            return X_prox_k
+            
+            return X_prox_k, iter
         
         Xk = X_prox_k
+        iter += 1
+    
+    #print("Iterações necessrias: ", iter)
 
-#raiz(list_A)
-print("tamnho de list_A: ", len(list_A))
-print("tamnho de list_chute_x0: ", len(list_chute_x0))
-print("tamnho de list_chute_py: ", len(list_chute_py))
-      
+
+def sqrt_log(A,Parada):
+    
+    Xk = math.exp(0.5 * math.log(A))
+    #print("Chute log: ", Xk)
+    iter = 1
+    for _ in range(100):
+        
+        X_prox_k =0.5 * (Xk + A/Xk)
+        #print("X_prox_k: ", X_prox_k)
+
+        if abs(X_prox_k - Xk) < Parada:
+            return X_prox_k, iter
+        
+        Xk = X_prox_k
+        iter += 1
+
+
+def grafico(L1, L2,A):
+
+    plt.figure(figsize=(8, 5.5))  # Define o tamanho da figura
+
+    # Plotando os valores de A, B e C
+    plt.plot(L1, A, color='blue', marker='o', linestyle='-', label='Iter_T1 versus A')  # A versus B
+    plt.plot(L2, A, color='green', marker='s', linestyle='-', label='Iter_log versus A')  # A versus C
+
+    # Adicionando rótulos e título
+    plt.xlabel('Valores de interação T1 e interação log', color='red', fontweight='bold')
+    plt.ylabel('Valor de A', color='red', fontweight='bold')
+    plt.title('Valores de A em relação a interação T1 e interação log', color='blue', fontweight='bold')
+    
+    # Adicionando legenda
+    plt.legend()
+
+    # Adicionando grade
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    plt.show()
+
+
+raiz(list_A) # calcula o chute inicial para cada A usando o trab 1
+
 for i in range(len(list_A)):
     print(i)
     print("A: ", list_A[i])
-    print("chute x0: ", list_chute_x0[i])
-       
-    mS=mySqrt(list_A[i],list_chute_x0[i],Parada)
-    list_mySqrt.append(mS)
+   
+    ms_T1,it = mySqrt(list_A[i],list_chute_T1[i],Parada)
+    list_T1.append(ms_T1)
+    list_T1_iter.append(it)
 
-    print("Raiz Calculada mySqrt: ", mS)
-    print("Raiz Calculada Python: ", math.sqrt(list_A[i]))
+    mS_log,iterlog=sqrt_log(list_A[i],Parada)
+    list_sqrt_log.append(mS_log)
+    list_sqrt_log_iter.append(iterlog)
+
+   
+    print("Raiz Calc   mySqrt T1: ", ms_T1, "|| Iterações : ", it)
+    print("Raiz Calc sqrt_log   : ", mS_log, "|| Iterações: ", iterlog)
+    print("Raiz Calc   Python   : ", math.sqrt(list_A[i]))
     print("---------------")
 
+grafico(list_T1_iter, list_sqrt_log_iter,list_A)
 
+
+    
